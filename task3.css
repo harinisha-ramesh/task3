@@ -1,0 +1,15 @@
+html,body{
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(165, 148, 197);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+h1{
+    background-color: rgb(224, 223, 222);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+}

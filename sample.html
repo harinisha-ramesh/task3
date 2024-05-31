@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: darkgrey;
+    }
+   
+    #todoForm {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+    }
+    #todoForm input {
+      padding: 10px;
+      width: 300px;
+    }
+    #todoForm button {
+      padding: 10px;
+    }
+    #taskList {
+      list-style-type: none;
+      padding: 0;
+    }
+    #taskList li {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+    }
+    #taskList li span {
+      flex-grow: 1;
+    }
+    .edit, .delete {
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+  <div id="todoForm">
+    <input type="text" id="taskInput" placeholder="Enter a new task" />
+    <button id="addButton">Add</button>
+  </div>
+  <ul id="taskList"></ul>
+
+  <script>
+    let tasks = [];
+    let editIndex = null;
+
+    document.getElementById('addButton').addEventListener('click', function() {
+      const taskInput = document.getElementById('taskInput');
+      const taskName = taskInput.value.trim();
+
+      if (taskName === '' || tasks.includes(taskName)) {
+        alert('Task name cannot be empty or duplicate');
+        return;
+      }
+
+      if (editIndex !== null) {
+        tasks[editIndex] = taskName;
+        editIndex = null;
+        document.getElementById('addButton').innerText = 'Add';
+      } else {
+        tasks.push(taskName);
+      }
+
+      taskInput.value = '';
+      renderTasks();
+    });
+
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.innerText = task;
+        span.addEventListener('click', () => editTask(index));
+        li.appendChild(span);
+
+        const editBtn = document.createElement('span');
+        editBtn.innerText = '✏️';
+        editBtn.classList.add('edit');
+        editBtn.addEventListener('click', () => editTask(index));
+        li.appendChild(editBtn);
+
+        const deleteBtn = document.createElement('span');
+        deleteBtn.innerText = '🗑️';
+        deleteBtn.classList.add('delete');
+        deleteBtn.addEventListener('click', () => deleteTask(index));
+        li.appendChild(deleteBtn);
+
+        taskList.appendChild(li);
+      });
+    }
+
+    function editTask(index) {
+      document.getElementById('taskInput').value = tasks[index];
+      document.getElementById('addButton').innerText = 'Save';
+      editIndex = index;
+    }
+
+    function deleteTask(index) {
+      const confirmed = confirm('Are you sure you want to delete the task?');
+      if (confirmed) {
+        tasks.splice(index, 1);
+        renderTasks();
+      }
+    }
+
+    // Initial render
+    renderTasks();
+  </script>
+</body>
+</html>
