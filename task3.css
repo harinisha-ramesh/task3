@@ -68,8 +68,12 @@ h1 {
 
 .editButton::before {
     content: 'Edit';
+    background-color: green;
+    padding: 10px;
 }
 
 .deleteButton::before {
     content: 'Delete';
+    background-color: red;
+    padding: 10px;
 }
