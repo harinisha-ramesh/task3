@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.forEach((task, index) => {
             const li = document.createElement('li');
             li.textContent = task;
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('task-buttons');
             const editButton = document.createElement('button');
             editButton.classList.add('editButton');
             editButton.addEventListener('click', () => {
@@ -44,8 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderTasks();
                 }
             });
-            li.appendChild(editButton);
-            li.appendChild(deleteButton);
+            buttonContainer.appendChild(editButton);
+            buttonContainer.appendChild(deleteButton);
+            li.appendChild(buttonContainer);
             taskList.appendChild(li);
         });
     }
