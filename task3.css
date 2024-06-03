@@ -15,8 +15,8 @@ html,body {
     background-color: rgb(224, 223, 222);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 30%;
+    width: 90%;
+    max-width: 400px;
 }
 
 h1 {
@@ -59,6 +59,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .editButton, .deleteButton {
@@ -66,6 +67,7 @@ h1 {
     background: none;
     cursor: pointer;
     margin-left: 10px;
+    
 }
 
 .editButton::before {
