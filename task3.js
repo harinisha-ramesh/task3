@@ -2,35 +2,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const addButton = document.getElementById('addButton');
     const taskList = document.getElementById('taskList');
-    let tasks = [];
+    let taskToDo = [];
     let editIndex = -1;
 
     addButton.addEventListener('click', () => {
         const taskValue = taskInput.value.trim();
-        if (taskValue && !tasks.includes(taskValue)) {
+        if (taskValue && !taskToDo.includes(taskValue)) {
             if (editIndex === -1) {
-                tasks.push(taskValue);
+                taskToDo.push(taskValue);
             } else {
-                tasks[editIndex] = taskValue;
+                taskToDo[editIndex] = taskValue;
                 editIndex = -1;
                 addButton.textContent = 'Add';
             }
             taskInput.value = '';
             renderTasks();
-        } else if (tasks.includes(taskValue)) {
+        } else if (taskToDo.includes(taskValue)) {
             alert('Task already exists.');
         } else {
-            alert('Task cannot be empty.');
+            alert('Task cannot be empty.'); 
         }
     });
 
     function renderTasks() {
         taskList.innerHTML = '';
-        tasks.forEach((task, index) => {
+        taskToDo.forEach((task, index) => {
             const li = document.createElement('li');
             li.textContent = task;
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('task-buttons');
+
             const editButton = document.createElement('button');
             editButton.classList.add('editButton');
             editButton.addEventListener('click', () => {
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteButton.classList.add('deleteButton');
             deleteButton.addEventListener('click', () => {
                 if (confirm('Are you sure you want to delete the task?')) {
-                    tasks.splice(index, 1);
+                    taskToDo.splice(index, 1);
                     renderTasks();
                 }
             });
