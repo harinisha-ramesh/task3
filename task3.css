@@ -1,12 +1,14 @@
 html,body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
     background-color: rgb(165, 148, 197);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
-    margin: 0;
+  
 }
 
 .container {
@@ -14,7 +16,7 @@ html,body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 30%;
 }
 
 h1 {
@@ -36,8 +38,8 @@ h1 {
 
 #addButton {
     padding: 10px;
-    background-color: #007bff;
-    color: white;
+    background-color: rgb(165, 148, 197);
+    color: rgba(255, 255, 255, 0.856);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -68,12 +70,14 @@ h1 {
 
 .editButton::before {
     content: 'Edit';
-    background-color: green;
+    background-color: rgb(57, 139, 57);
     padding: 10px;
+    border-radius: 5px;
 }
 
 .deleteButton::before {
     content: 'Delete';
-    background-color: red;
+    background-color: rgb(173, 55, 55);
     padding: 10px;
+    border-radius: 5px;
 }
