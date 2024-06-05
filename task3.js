@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let editIndex = -1;
 
     addButton.addEventListener('click', () => {
+      
         const taskValue = taskInput.value.trim();
         if (taskValue && !taskToDo.includes(taskValue)) {
             if (editIndex === -1) {
