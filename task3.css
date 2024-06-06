@@ -59,13 +59,20 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+    overflow-wrap: break-word; /* long words will break correctly*/
+    word-wrap: break-word;
+    white-space: normal;
 }
 .task-butons{
     display: flex;
     gap: 10px;
+    flex-shrink: 0;
 }
-
+.task-text{
+    flex: 1; /* allows text container to grow*/
+    margin-right: 10px;
+    word-break: break-word; /* ensure words breaking correctly*/
+}
 .editButton, .deleteButton {
     border: none;
     background: none;
@@ -88,11 +95,11 @@ h1 {
     padding: 10px;
     border-radius: 5px;
 }
-.toastMessage{
+.toastContainer{
     position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
+    top: 20px;
+    left: 25px;
+    
 }
 .toast{
     display: none;
@@ -101,6 +108,9 @@ h1 {
     border-radius: 5px;
     color: white;
     font-weight: bold;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 .toast.success{
     background-color: green;
@@ -113,5 +123,5 @@ h1 {
     color: black;
 }
 .toast.error{
-    background-color: red;
+    background-color: rgb(173, 55, 55);
 }

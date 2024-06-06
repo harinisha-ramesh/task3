@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('taskInput');
     const addButton = document.getElementById('addButton');
     const taskList = document.getElementById('taskList');
+    const toastContainer = document.createElement('div');
+    toastContainer.className = 'toastContainer';
+    document.body.appendChild(toastContainer);
     let taskToDo = [];
     let editIndex = -1;
 
@@ -11,17 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (taskValue && !taskToDo.includes(taskValue)) {
             if (editIndex === -1) {
                 taskToDo.push(taskValue);
-                showToast('Task Added Successfully','success');
+                showToast(`Task "${taskValue}" added successfully`,'success');
             } else {
+                const oldTask = taskToDo[editIndex];
                 taskToDo[editIndex] = taskValue;
                 editIndex = -1;
                 addButton.textContent = 'Add';
-                showToast('Task Edited Successfully','Information')
+                showToast(`Task "${oldTask}" edited to "${taskValue}" Successfully`,'Information')
             }
             taskInput.value = '';
             renderTasks();
         } else if (taskToDo.includes(taskValue)) {
-            showToast('Task already exists','warning');
+            showToast(`Task "${taskValue}" already exists`,'warning');
         } else {
             showToast('Task cannot be empty','warning'); 
         }
@@ -31,7 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         taskList.innerHTML = '';
         taskToDo.forEach((task, index) => {
             const li = document.createElement('li');
-            li.textContent = task;
+
+            const taskText = document.createElement('div');
+            taskText.className = 'task-text';
+            taskText.textContent = task;
+
             const buttonContainer = document.createElement('div');
             buttonContainer.classList.add('task-buttons');
 
@@ -48,11 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (confirm('Are you sure you want to delete the task?')) {
                     taskToDo.splice(index, 1);
                     renderTasks();
-                    showToast('Task Deleted Successfully','error')
+                    showToast(`Task "${task}" Deleted Successfully`,'error')
                 }
             });
             buttonContainer.appendChild(editButton);
             buttonContainer.appendChild(deleteButton);
+            li.appendChild(taskText);
             li.appendChild(buttonContainer);
             taskList.appendChild(li);
         });
@@ -61,11 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const toast = document.createElement('div');
         toast.classList.add('toast',type);
         toast.textContent= message;
-        toastMessage.appendChild(toast);
+        toastContainer.appendChild(toast);
         toast.style.display = 'block';
         setTimeout(() => {
             toast.style.display = 'none';
-            toastMessage.removeChild(toast);
+            toastContainer.removeChild(toast);
         }, 3000);
     }
 });
