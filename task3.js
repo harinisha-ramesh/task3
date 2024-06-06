@@ -11,17 +11,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (taskValue && !taskToDo.includes(taskValue)) {
             if (editIndex === -1) {
                 taskToDo.push(taskValue);
+                showToast('Task Added Successfully','success');
             } else {
                 taskToDo[editIndex] = taskValue;
                 editIndex = -1;
                 addButton.textContent = 'Add';
+                showToast('Task Edited Successfully','Information')
             }
             taskInput.value = '';
             renderTasks();
         } else if (taskToDo.includes(taskValue)) {
-            alert('Task already exists.');
+            showToast('Task already exists','warning');
         } else {
-            alert('Task cannot be empty.'); 
+            showToast('Task cannot be empty','warning'); 
         }
     });
 
@@ -46,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (confirm('Are you sure you want to delete the task?')) {
                     taskToDo.splice(index, 1);
                     renderTasks();
+                    showToast('Task Deleted Successfully','error')
                 }
             });
             buttonContainer.appendChild(editButton);
@@ -53,5 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(buttonContainer);
             taskList.appendChild(li);
         });
+    }
+    function showToast(message,type){
+        const toast = document.createElement('div');
+        toast.classList.add('toast',type);
+        toast.textContent= message;
+        toastMessage.appendChild(toast);
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+            toastMessage.removeChild(toast);
+        }, 3000);
     }
 });
