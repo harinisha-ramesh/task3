@@ -5,6 +5,7 @@ html,body {
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: rgb(165, 148, 197);
+    overflow: hidden;
   
 }
 .wrapper{
@@ -17,20 +18,36 @@ html,body {
 }
 
 .container {
-    margin:20px;
+    height: auto;
+    margin:15px;
     width: 80%;
     background-color: rgb(224, 223, 222);
     padding: 20px;
     border-radius: 10px; 
     flex-shrink: 0;     
 }
+.tab-container{
+    height: auto;
+    margin: 5px;
+}
 
+.tab{
+    padding: 10px 20px;
+    border: none;
+    background-color: #ccc;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+}
+.tab.active{
+    background-color: #f0f0f0;
+}
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .taskListContainer{
     width: 83%;
+    height: 65%;
     overflow-y: auto;
     flex-grow: 1;
     padding: 0 20px;
@@ -38,6 +55,7 @@ h1 {
 .input-container {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
 }
 
 #taskInput {
@@ -111,6 +129,7 @@ h1 {
     position: fixed;
     top: 20px;
     left: 25px;
+    z-index: 999;
     
 }
 .toast{
