@@ -5,11 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastContainer = document.createElement('div');
     toastContainer.className = 'toastContainer';
     document.body.appendChild(toastContainer);
-    let taskToDo = [];
+    let taskToDo = JSON.parse(localStorage.getItem('tasks')) || [];
     let editIndex = -1;
 
-    addButton.addEventListener('click', () => {
-      
+    addButton.addEventListener('click', addTask);
+
+    taskInput.addEventListener('keydown',(event) => {
+        if(event.key === 'Enter') {
+            addTask();
+        }
+    })
+    function addTask()  {
         const taskValue = taskInput.value.trim();
         if (taskValue && !taskToDo.includes(taskValue)) {
             if (editIndex === -1) {
@@ -23,17 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast(`Task "${oldTask}" edited to "${taskValue}" Successfully`,'Information')
             }
             taskInput.value = '';
+            saveTasks();
             renderTasks();
         } else if (taskToDo.includes(taskValue)) {
             showToast(`Task "${taskValue}" already exists`,'warning');
         } else {
-            showToast('Task cannot be empty','warning'); 
+            showToast(`Task cannot be empty`,'warning'); 
         }
-    });
+    }
 
     function renderTasks() {
         taskList.innerHTML = '';
         taskToDo.forEach((task, index) => {
+            if (task !== null) {
             const li = document.createElement('li');
 
             const taskText = document.createElement('div');
@@ -54,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteButton.classList.add('deleteButton');
             deleteButton.addEventListener('click', () => {
                 if (confirm('Are you sure you want to delete the task?')) {
-                    taskToDo.splice(index, 1);
+                    taskToDo[index] = null;
+                    saveTasks();
                     renderTasks();
                     showToast(`Task "${task}" Deleted Successfully`,'error')
                 }
@@ -64,8 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(taskText);
             li.appendChild(buttonContainer);
             taskList.appendChild(li);
-        });
-    }
+        }
+    });
+    }      
+    function saveTasks(){
+        localStorage.setItem('tasks',JSON.stringify(taskToDo));
+    } 
+       
+    
     function showToast(message,type){
         const toast = document.createElement('div');
         toast.classList.add('toast',type);
@@ -77,4 +92,5 @@ document.addEventListener('DOMContentLoaded', () => {
             toastContainer.removeChild(toast);
         }, 3000);
     }
+    renderTasks();
 });
