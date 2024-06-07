@@ -4,7 +4,7 @@ html,body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: rgb(165, 148, 197);
+    background-color: #0b2772;
     overflow: hidden;
   
 }
@@ -52,6 +52,8 @@ h1 {
     flex-grow: 1;
     padding: 0 20px;
 }
+
+
 .input-container {
     display: flex;
     justify-content: space-between;
@@ -67,18 +69,42 @@ h1 {
 
 #addButton {
     width: 10%;
-    background-color: rgb(165, 148, 197);
+    background-color: #0b2772;
     color: rgba(255, 255, 255, 0.856);
     border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
 }
+.taskListHeader{
+    display: flex;
+    justify-content: space-between;
+    background-color: #ccc;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.taskListHeader div{
+    text-align: center;
+    font-weight: bold;
+}
+.taskListHeader .taskListHeaderText{
+    flex: 2;
+    text-align: center;
+}
+.taskListHeader .taskListHeaderActions{
+    flex: 0.3;
+    text-align: center;
+}
 
 #taskList {
     list-style-type: none;
     padding: 0;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 #taskList li {
@@ -155,4 +181,39 @@ h1 {
 }
 .toast.error{
     background-color: rgb(173, 55, 55);
+}
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow:auto;
+    background-color:white ;
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+.modal-content{
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid gray;
+    width: 70%;
+    text-align: center;
+}
+.modal-content button{
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.modal-content #confirmDelete{
+    background-color: rgb(168, 36, 36);
+}
+.modal-content #cancelDelete{
+    background-color: rgb(25, 142, 189);
+    color: white;
 }

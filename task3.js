@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let editIndex = -1;
     let currentCategory = 'all';
 
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmMessage = document.getElementById('confirmMessage');
+    const confirmDeleteButton = document.getElementById('confirmDelete');
+    const cancelDeleteButton = document.getElementById('cancelDelete');
+    let deleteIndex = -1;
+
     addButton.addEventListener('click', addTask);
 
     taskInput.addEventListener('keydown',(event) => {
@@ -93,13 +99,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('deleteButton');
                 deleteButton.addEventListener('click', () => {
-                    if (confirm('Are you sure you want to delete the task?')) {
-                        taskToDo.splice(index,1);
-                        saveTasks();
-                        renderTasks();
-                        showToast(`Task "${task.text}" Deleted Successfully`,'error')
+                    deleteIndex = index;
+                    if(confirmMessage) {
+                        confirmMessage.textContent = `Are you sure do you want to delete the task "${task.text}"?`;
+                    } else {
+                        console.error('Element with id "confirmMessage" not found');
                     }
+                    confirmModal.style.display = 'block';
                 });
+
                 buttonContainer.appendChild(editButton);
                 buttonContainer.appendChild(deleteButton);
                 li.appendChild(checkbox);
@@ -116,6 +124,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         updateCategoryCounts();
     }  
+
+    confirmDeleteButton.addEventListener('click',() => {
+        if (deleteIndex !== -1) {
+            const task = taskToDo[deleteIndex];
+            taskToDo.splice(deleteIndex,1);
+            saveTasks();
+            renderTasks();
+            showToast(`Task "${task.text}" Deleted Successfully`,'error');
+            deleteIndex = -1;
+            confirmModal.style.display = 'none';
+        }
+    });
+
+    cancelDeleteButton.addEventListener('click',() => {
+        confirmModal.style.display = 'none';
+        deleteIndex = -1;
+    });
+
     function updateCategoryCounts(){
         const allCount = taskToDo.filter(task => task && task.text && task.text.trim() !== '').length;
         const completedCount = taskToDo.filter(task => task && task.completed).length;

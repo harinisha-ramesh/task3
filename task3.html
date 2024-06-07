@@ -20,8 +20,20 @@
             <button class="tab" data-category="completed">Completed</button>
             <button class="tab" data-category="in-progress">In Progress</button>
         </div>
-        <div class="taskListContainer">    
+        <div class="taskListContainer"> 
+            <div class="taskListHeader">
+               <div class="taskListHeaderText">List of tasks</div>
+               <div class="taskListHeaderActions">Actions</div> 
+            </div>   
             <ul id="taskList"></ul>
+        </div>
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <p id="confirmMessage">Are you sure do you want to delete the task?</p>
+                <button id="confirmDelete">Yes</button>
+                <button id="cancelDelete">No</button>
+            </div>
+
         </div>
     </div>
     <script src="task3.js"></script>
