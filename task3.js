@@ -16,14 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelDeleteButton = document.getElementById('cancelDelete');
     let deleteIndex = -1;
 
+    //Adds a task when the add button is clicked
     addButton.addEventListener('click', addTask);
-
+    
+    //Adds a task when Entry key is pressed
     taskInput.addEventListener('keydown',(event) => {
         if(event.key === 'Enter') {
             addTask();
         }
     });
     
+    //Updates task category when a tab is clicked
     tabs.forEach(tab => {
         tab.addEventListener('click',() => {
             currentCategory = tab.dataset.category;
@@ -34,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateTabStyles(tab);
         });
     });
+
+    //Adds a new task or edits an existing task
     function addTask()  {
         const taskValue = taskInput.value.trim();
         if (taskValue && !taskToDo.some(task => task && task.text === taskValue)) {
@@ -57,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         updateCategoryCounts();
     }
-
+    
+    //Renders the tasks based on the selected category
     function renderTasks() {
         const filteredTasks = taskToDo.filter(task => {
             if(currentCategory === 'completed') {
@@ -114,7 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.appendChild(taskText);
                 li.appendChild(buttonContainer);
                 taskList.appendChild(li);
-
+                
+                //Strikes through completed tasks
                 if (task.completed) {
                     taskText.style.textDecoration = "line-through";
                 } else {
@@ -124,7 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         updateCategoryCounts();
     }  
-
+    
+    //Deletes a task when the delete is confirmed
     confirmDeleteButton.addEventListener('click',() => {
         if (deleteIndex !== -1) {
             const task = taskToDo[deleteIndex];
@@ -136,12 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmModal.style.display = 'none';
         }
     });
-
+    
+    //Cancels the delete action
     cancelDeleteButton.addEventListener('click',() => {
         confirmModal.style.display = 'none';
         deleteIndex = -1;
     });
-
+    
+    //Updates the count of tasks in each category
     function updateCategoryCounts(){
         const allCount = taskToDo.filter(task => task && task.text && task.text.trim() !== '').length;
         const completedCount = taskToDo.filter(task => task && task.completed).length;
@@ -150,7 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('[data-category="completed"]').textContent = `Completed (${completedCount})`;
         document.querySelector('[data-category="in-progress"]').textContent = `In Progress (${inProgressCount})`;
 
-    }  
+    } 
+    
+    //Highlights the active tab
     function updateTabStyles(activeTab) {
         tabs.forEach(tab => {
             if (tab === activeTab){
@@ -160,12 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } 
-
+    
+    //saves task to local storage
     function saveTasks(){
         localStorage.setItem('tasks',JSON.stringify(taskToDo));
     } 
        
-    
+    //Displays a toast message
     function showToast(message,type){
         const toast = document.createElement('div');
         toast.classList.add('toast',type);
