@@ -217,8 +217,11 @@ h1 {
 }
 .modal-content #confirmDelete{
     background-color: rgb(168, 36, 36);
+    color: white;
+    font-weight: bold;
 }
 .modal-content #cancelDelete{
     background-color: rgb(25, 142, 189);
     color: white;
+    font-weight: bold;
 }
