@@ -249,32 +249,32 @@ h1 {
         padding: 0 ;
     }
     .taskListContainer {
-        padding: 0 10px; /* Adjusted padding */
+        padding: 0 10px; 
     }
 
     #taskList li {
-        padding: 8px; /* Adjusted padding */
-        margin-bottom: 8px; /* Adjusted margin */
+        padding: 8px; 
+        margin-bottom: 8px; 
     }
 
     .taskListHeader {
-        padding: 8px; /* Adjusted padding */
-        margin-top: 3px; /* Adjusted margin */
-        margin-bottom: 3px; /* Adjusted margin */
+        padding: 8px; 
+        margin-top: 3px; 
+        margin-bottom: 3px; 
     }
 
     .task-text {
-        margin-right: 5px; /* Adjusted margin */
-        font-size: 16px; /* Adjusted font size */
+        margin-right: 5px; 
+        font-size: 16px; 
     }
 
     .editButton,
     .deleteButton {
-        font-size: 14px; /* Adjusted font size */
+        font-size: 14px; 
     }
 
     .modal-content {
-        width: 70%; /* Adjusted width */
+        width: 70%; 
     }
 }
     
