@@ -225,3 +225,56 @@ h1 {
     color: white;
     font-weight: bold;
 }
+@media screen and (max-width: 380px) {
+    /* Adjustments for screens below 380 pixels wide */
+
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    #taskInput {
+        width: 75%;
+    }
+
+    #addButton {
+        width: 20%;
+    }
+
+    .tab {
+        padding: 8px 16px;
+    }
+
+    .taskListContainer {
+        padding: 0 ;
+    }
+    .taskListContainer {
+        padding: 0 10px; /* Adjusted padding */
+    }
+
+    #taskList li {
+        padding: 8px; /* Adjusted padding */
+        margin-bottom: 8px; /* Adjusted margin */
+    }
+
+    .taskListHeader {
+        padding: 8px; /* Adjusted padding */
+        margin-top: 3px; /* Adjusted margin */
+        margin-bottom: 3px; /* Adjusted margin */
+    }
+
+    .task-text {
+        margin-right: 5px; /* Adjusted margin */
+        font-size: 16px; /* Adjusted font size */
+    }
+
+    .editButton,
+    .deleteButton {
+        font-size: 14px; /* Adjusted font size */
+    }
+
+    .modal-content {
+        width: 70%; /* Adjusted width */
+    }
+}
+    
