@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCategory = tab.dataset.category;
             renderTasks();
             updateCategoryCounts();
-            tabs.forEach(t => t.classList.add('active'));
+            tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             updateTabStyles(tab);
         });
