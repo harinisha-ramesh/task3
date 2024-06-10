@@ -108,9 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     deleteIndex = index;
                     if(confirmMessage) {
                         confirmMessage.textContent = `Are you sure do you want to delete the task "${task.text}"?`;
-                    } else {
-                        console.error('Element with id "confirmMessage" not found');
-                    }
+                    } 
                     confirmModal.style.display = 'block';
                 });
 
