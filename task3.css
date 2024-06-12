@@ -71,7 +71,7 @@ h1 {
 }
 
 .taskListContainer{
-    width: 83%;
+    width: 50%;
     height: 65%;
     overflow-y: auto;
     flex-grow: 1;
@@ -225,6 +225,7 @@ h1 {
     color: white;
     font-weight: bold;
 }
+
 @media screen and (max-width: 380px) {
     /* Adjustments for screens below 380 pixels wide */
 

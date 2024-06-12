@@ -17,8 +17,9 @@
         </div>
         <div class="tab-container">
             <button class="tab active" data-category="all">All Tasks</button>
-            <button class="tab" data-category="completed">Completed</button>
             <button class="tab" data-category="in-progress">In Progress</button>
+            <button class="tab" data-category="completed">Completed</button>
+            
         </div>
         <div class="taskListContainer"> 
             <div class="taskListHeader">
@@ -34,6 +35,13 @@
                 <button id="cancelDelete">No</button>
             </div>
 
+        </div>
+        <div id="completeModal" class="modal">
+            <div class="modal-content">
+                <p id="completeMessage">Are you sure do you want to mark the task as completed?</p>
+                <button id="confirmComplete">Yes</button>
+                <button id="cancelComplete">No</button>
+            </div>
         </div>
     </div>
     <script src="task3.js"></script>

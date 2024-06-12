@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmDeleteButton = document.getElementById('confirmDelete');
     const cancelDeleteButton = document.getElementById('cancelDelete');
     let deleteIndex = -1;
+    let completeIndex = -1;
 
     //Adds a task when the add button is clicked
     addButton.addEventListener('click', addTask);
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Adds a task when Entry key is pressed
     taskInput.addEventListener('keydown',(event) => {
         if(event.key === 'Enter') {
+            switchTab('all');
             addTask();
         }
     });
@@ -73,7 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return true;
         });
+        filteredTasks.sort((a, b) => {
+            if (currentCategory === 'completed') {
+                return a.completed ? -1 : 1;
+            } else if (currentCategory === 'in-progress') {
+                return !a.completed ? -1 : 1;
+            }
+            return 0;
+        });
         taskList.innerHTML = '';
+        
         filteredTasks.forEach((task, index) => {
             if (task && task.text) {
                 const li = document.createElement('li');
@@ -89,9 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 checkbox.type = 'checkbox';
                 checkbox.checked = task.completed;
                 checkbox.addEventListener('change',() => {
-                    task.completed = checkbox.checked;
-                    saveTasks();
-                    renderTasks();           
+                    confirmCompletion(task,index,checkbox);           
                 });
 
                 const editButton = document.createElement('button');
@@ -129,7 +138,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         updateCategoryCounts();
     }  
-    
+    function confirmCompletion(task,index,checkbox){
+        confirmMessage.textContent = checkbox.checked ?
+            `Are you sure do you want to mark the task "${task.text}" as completed?`:
+            `Are you sure do you want to mark the task "${task.text}" as uncompleted?`;
+        confirmModal.style.display = 'block';
+
+        
+        confirmDeleteButton.onclick = () => {
+            task.completed = checkbox.checked;
+            saveTasks();
+            renderTasks();
+            if (checkbox.checked) {
+                showToast(`Task "${task.text}" marked as completed`, 'information');
+                switchTab('completed');
+            } else{
+                showToast(`Task "${task.text}" marked as in progress`,'Information');
+                switchTab('in-progress');
+            }
+            confirmModal.style.display = 'none';
+        };
+        cancelDeleteButton.onclick = () => {
+            checkbox.checked = !checkbox.checked;
+            confirmModal.style.display = 'none';
+        };
+    }
     //Deletes a task when the delete is confirmed
     confirmDeleteButton.addEventListener('click',() => {
         if (deleteIndex !== -1) {
@@ -140,6 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast(`Task "${task.text}" Deleted Successfully`,'error');
             deleteIndex = -1;
             confirmModal.style.display = 'none';
+        } else if (completeIndex !== -1) {
+            taskToDo[completeIndex].completed = true;
+            saveTasks();
+            renderTasks();
+            showToast(`Task "${taskToDo[completeIndex].text}" marked as completed`,'success');
+            completeIndex = -1;
+            confirmModal.style.display = 'none';
         }
     });
     
@@ -147,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cancelDeleteButton.addEventListener('click',() => {
         confirmModal.style.display = 'none';
         deleteIndex = -1;
+        completeIndex = -1;
     });
     
     //Updates the count of tasks in each category
@@ -188,5 +229,20 @@ document.addEventListener('DOMContentLoaded', () => {
             toastContainer.removeChild(toast);
         }, 3000);
     }
+
+    function switchTab(category) {
+        currentCategory = category;
+        renderTasks();
+        updateCategoryCounts();
+        tabs.forEach(tab => {
+            if (tab.dataset.category === category) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        updateTabStyles(document.querySelector(`[data-category="${category}"]`));
+    }
+
     renderTasks();
 });
