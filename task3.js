@@ -17,6 +17,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let deleteIndex = -1;
     let completeIndex = -1;
 
+    const specialChars = `,./<>?;':"\|{}[]()!@#$%^&*~`;
+    const specialCharNote = document.createElement('div');
+    specialCharNote.textContent = '*Special Characters are not Allowed*';
+    specialCharNote.style.display = 'none';
+    specialCharNote.style.color = 'red';
+    document.querySelector('.container').appendChild(specialCharNote);
+
+    taskInput.addEventListener('keypress', (event) => {
+        const inputChar = event.key;
+        const specialChars = `,./<>?;':"\|{}[]()!@#$%^&*~`;
+        if (inputChar === ' ' && taskInput.value.length === 0) {
+            event.preventDefault(); // Prevent spaces at the begining
+        }
+        if (specialChars.includes(inputChar)) {
+            event.preventDefault(); //Prevent special characters
+            specialCharNote.style.display = 'block';
+        } else {
+            specialCharNote.style.display = 'none';
+        }
+    });
+
     //Adds a task when the add button is clicked
     addButton.addEventListener('click', addTask);
     
@@ -43,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //Adds a new task or edits an existing task
     function addTask()  {
         const taskValue = taskInput.value.trim();
+        const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // check for valid input
         if (taskValue && !taskToDo.some(task => task && task.text === taskValue)) {
             if (editIndex === -1) {
                 taskToDo.unshift({text: taskValue, completed: false});
@@ -50,9 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 const oldTask = taskToDo[editIndex].text;
                 taskToDo[editIndex].text = taskValue;
+                taskToDo[editIndex].timestamp = Date.now();
                 editIndex = -1;
                 addButton.textContent = 'Add';
-                showToast(`Task "${oldTask}" edited to "${taskValue}" Successfully`,'Information')
+                showToast(`Task "${oldTask}" edited to "${taskValue}" Successfully`,'information')
             }
             taskInput.value = '';
             saveTasks();
@@ -76,10 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         });
         filteredTasks.sort((a, b) => {
-            if (currentCategory === 'completed') {
-                return a.completed ? -1 : 1;
-            } else if (currentCategory === 'in-progress') {
-                return !a.completed ? -1 : 1;
+            if (a && b && a.timestamp && b.timestamp) {
+                return b.timestamp - a.timestamp;
             }
             return 0;
         });
@@ -147,13 +168,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         confirmDeleteButton.onclick = () => {
             task.completed = checkbox.checked;
+            task.timestamp = Date.now();
             saveTasks();
             renderTasks();
             if (checkbox.checked) {
                 showToast(`Task "${task.text}" marked as completed`, 'information');
                 switchTab('completed');
             } else{
-                showToast(`Task "${task.text}" marked as in progress`,'Information');
+                showToast(`Task "${task.text}" marked as in progress`,'information');
                 switchTab('in-progress');
             }
             confirmModal.style.display = 'none';

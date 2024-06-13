@@ -175,7 +175,7 @@ h1 {
 .toast.success{
     background-color: green;
 }
-.toast.Information{
+.toast.information{
     background-color:blue;
 }
 .toast.warning{
