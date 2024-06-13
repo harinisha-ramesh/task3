@@ -10,6 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let editIndex = -1;
     let currentCategory = 'all';
 
+    const emptyMessage = document.createElement('div');
+    emptyMessage.className = 'empty-message';
+    emptyMessage.textContent = 'No Tasks Available';
+    document.querySelector('.taskLists').appendChild(emptyMessage);
+
     const confirmModal = document.getElementById('confirmModal');
     const confirmMessage = document.getElementById('confirmMessage');
     const confirmDeleteButton = document.getElementById('confirmDelete');
@@ -64,12 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
     //Adds a new task or edits an existing task
     function addTask()  {
         const taskValue = taskInput.value.trim();
+        const isDuplicate = taskToDo.some(task => 
+            task && task.text && task.text.toLowerCase() === taskkValue.toLowerCase()
+        );
         const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // check for valid input
         if (taskValue && !taskToDo.some(task => task && task.text === taskValue)) {
             if (editIndex === -1) {
                 taskToDo.unshift({text: taskValue, completed: false});
                 showToast(`Task "${taskValue}" added successfully`,'success');
             } else {
+                if (taskToDo[editIndex].text !== taskValue);
                 const oldTask = taskToDo[editIndex].text;
                 taskToDo[editIndex].text = taskValue;
                 taskToDo[editIndex].timestamp = Date.now();
@@ -82,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTasks();
         } else if (taskToDo.some(task => task && task.text === taskValue)) {
             showToast(`Task "${taskValue}" already exists`,'warning');
+        } else if (taskValue && isDuplicate) {
+                showToast(`Task "${taskValue}" already exists`,'warning');
         } else {
             showToast(`Task cannot be empty`,'warning'); 
         }
@@ -130,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     taskInput.value = task.text;
                     addButton.textContent = 'Save';
                     editIndex = index;
+                    taskInput.focus();
                 });
 
                 const deleteButton = document.createElement('button');
@@ -217,10 +229,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const allCount = taskToDo.filter(task => task && task.text && task.text.trim() !== '').length;
         const completedCount = taskToDo.filter(task => task && task.completed).length;
         const inProgressCount = taskToDo.filter(task => task && task.text && !task.completed).length;
+       
         document.querySelector('[data-category="all"]').textContent = `All Tasks (${allCount})`;
         document.querySelector('[data-category="completed"]').textContent = `Completed (${completedCount})`;
         document.querySelector('[data-category="in-progress"]').textContent = `In Progress (${inProgressCount})`;
 
+        if (currentCategory === 'all' && allCount === 0) {
+            emptyMessage.style.display = 'block';
+        } else if (currentCategory === 'completed' && completedCount === 0){
+            emptyMessage.style.display = 'block';
+        } else if (currentCategory === 'in-progress' && inProgressCount === 0) {
+            emptyMessage.style.display = 'block';
+        } else {
+            emptyMessage.style.display = 'none';
+        }
     } 
     
     //Highlights the active tab
