@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
+    <title>practice</title>
     <link rel="stylesheet" href="task3.css">
 </head>
 <body>
@@ -13,6 +13,7 @@
             <div class="input-container">
                 <input type="text" id="taskInput" placeholder="Enter the task">
                 <button id="addButton">Add</button>
+                
             </div>
         </div>
         <div class="tab-container">
@@ -25,16 +26,15 @@
             <div class="taskListHeader">
                <div class="taskListHeaderText">List of tasks</div>
                <div class="taskListHeaderActions">Actions</div> 
-            </div> 
+            </div>  
             <div class="taskLists">
                 <ul id="taskList"></ul>
-            </div>  
+            </div> 
             
         </div>
         <div id="confirmModal" class="modal">
             <div class="modal-content">
                 <p id="confirmMessage">Are you sure do you want to delete the task?</p>
-                <p id="taskName"></p>
                 <button id="confirmDelete">Yes</button>
                 <button id="cancelDelete">No</button>
             </div>
@@ -43,6 +43,7 @@
         <div id="completeModal" class="modal">
             <div class="modal-content">
                 <p id="completeMessage">Are you sure do you want to mark the task as completed?</p>
+                <p id="taskName"></p>
                 <button id="confirmComplete">Yes</button>
                 <button id="cancelComplete">No</button>
             </div>
