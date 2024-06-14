@@ -358,8 +358,4 @@ if (a && b && a.timestamp && b.timestamp) {
 
     renderTasks();
     updateCategoryCounts();
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> fd6da2f38039afeb4c4efc4a2a72502c1a6fd1cc
