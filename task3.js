@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let taskToDo = JSON.parse(localStorage.getItem('tasks')) || [];
     let editIndex = -1;
     let currentCategory = 'all';
+    let isEditing = false;
+    let editingIndex = -1;
 
     const emptyMessage = document.createElement('div');
     emptyMessage.className = 'empty-message';
@@ -32,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     taskInput.addEventListener('keypress', (event) => {
         const inputChar = event.key;
         const specialChars = `,./<>?;':"\|{}[]()!@#$%^&*~`;
-        if (inputChar === ' ' && taskInput.value.length === 0) {
+        if (inputChar === ' '  && taskInput.value.length === 0){
             event.preventDefault(); // Prevent spaces at the begining
-        }
+    }   
         if (specialChars.includes(inputChar)) {
             event.preventDefault(); //Prevent special characters
             specialCharNote.style.display = 'block';
@@ -42,9 +44,21 @@ document.addEventListener('DOMContentLoaded', () => {
             specialCharNote.style.display = 'none';
         }
     });
-
     //Adds a task when the add button is clicked
-    addButton.addEventListener('click', addTask);
+    addButton.addEventListener('click', () => {
+        if (isEditing) {
+            // Edit mode
+            updateTask(editingIndex, taskInput.value);
+        } else {
+            // Add mode
+            if (taskInput.value.trim() !== '') {
+                addTask(taskInput.value);
+                taskInput.value = ''; // Clear the task input box
+            } else {
+                showToast('Please enter a task', 'error');
+            }
+        }
+    });
     
     //Adds a task when Entry key is pressed
     taskInput.addEventListener('keydown',(event) => {
@@ -67,37 +81,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //Adds a new task or edits an existing task
-    function addTask()  {
+    function addTask() {
         const taskValue = taskInput.value.trim();
-        const isDuplicate = taskToDo.some(task => 
-            task && task.text && task.text.toLowerCase() === taskkValue.toLowerCase()
-        );
-        const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // check for valid input
-        if (taskValue && !taskToDo.some(task => task && task.text === taskValue)) {
-            if (editIndex === -1) {
-                taskToDo.unshift({text: taskValue, completed: false});
-                showToast(`Task "${taskValue}" added successfully`,'success');
+        const isDuplicate = taskToDo.some(task => task && task.text && task.text.toLowerCase() === taskValue.toLowerCase());
+        const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // Check for valid input
+    
+        if (editIndex === -1) {
+            // Adding a new task
+            if (taskValue &&!isDuplicate) {
+                taskToDo.unshift({ text: taskValue, completed: false });
+                showToast(`Task "${taskValue}" added successfully`, 'success');
+                taskInput.value = '';
+                saveTasks();
+                renderTasks();
+            } else if (isDuplicate) {
+                showToast(`Task "${taskValue}" already exists`, 'warning');
             } else {
-                if (taskToDo[editIndex].text !== taskValue);
-                const oldTask = taskToDo[editIndex].text;
-                taskToDo[editIndex].text = taskValue;
-                taskToDo[editIndex].timestamp = Date.now();
-                editIndex = -1;
-                addButton.textContent = 'Add';
-                showToast(`Task "${oldTask}" edited to "${taskValue}" Successfully`,'information')
+                showToast(`Task cannot be empty`, 'warning');
             }
-            taskInput.value = '';
-            saveTasks();
-            renderTasks();
-        } else if (taskToDo.some(task => task && task.text === taskValue)) {
-            showToast(`Task "${taskValue}" already exists`,'warning');
-        } else if (taskValue && isDuplicate) {
-                showToast(`Task "${taskValue}" already exists`,'warning');
         } else {
-            showToast(`Task cannot be empty`,'warning'); 
+            // Editing an existing task
+            updateTask(editIndex, taskValue);
+            taskInput.value = '';
+            addButton.textContent = 'Add';
+            editIndex = -1;
         }
+    
         updateCategoryCounts();
     }
+    
+    function updateTask(index, updatedTaskText) {
+        const currentTaskText = taskToDo[index].text;
+        if (currentTaskText === updatedTaskText) {
+            showToast('There is no change in the task', 'information');
+           
+        } else if (taskToDo.some((task, i) => task && task.text === updatedTaskText && i!== index)) {
+            showToast('Task already exists', 'error');
+            
+        } else {
+            taskToDo[index].text = updatedTaskText;
+            saveTasks();
+            renderTasks();
+            showToast(`Task "${currentTaskText}" edited as "${updatedTaskText}" successfully`, 'information');
+            
+        }
+        taskInput.value = ''; // Clear the task input box
+        addButton.textContent = 'Add';
+        isEditing = false; // Reset the edit mode flag
+        editingIndex = -1;
+        editIndex= -1
+        closeModal();
+    }
+    
     
     //Renders the tasks based on the selected category
     function renderTasks() {
@@ -105,18 +140,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if(currentCategory === 'completed') {
                 return task && task.completed;
             } else if (currentCategory === 'in-progress'){
-                return task && !task.completed;
-            }
-            return true;
+                return task &&!task.completed;
+            } else {
+                return true;
+            }    
         });
         filteredTasks.sort((a, b) => {
-            if (a && b && a.timestamp && b.timestamp) {
+if (a && b && a.timestamp && b.timestamp) {
                 return b.timestamp - a.timestamp;
             }
             return 0;
         });
         taskList.innerHTML = '';
-        
+
         filteredTasks.forEach((task, index) => {
             if (task && task.text) {
                 const li = document.createElement('li');
@@ -160,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.appendChild(taskText);
                 li.appendChild(buttonContainer);
                 taskList.appendChild(li);
-                
+
                 //Strikes through completed tasks
                 if (task.completed) {
                     taskText.style.textDecoration = "line-through";
@@ -169,15 +205,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
         updateCategoryCounts();
-    }  
+    }
+
     function confirmCompletion(task,index,checkbox){
         confirmMessage.textContent = checkbox.checked ?
             `Are you sure do you want to mark the task "${task.text}" as completed?`:
             `Are you sure do you want to mark the task "${task.text}" as uncompleted?`;
         confirmModal.style.display = 'block';
 
-        
         confirmDeleteButton.onclick = () => {
             task.completed = checkbox.checked;
             task.timestamp = Date.now();
@@ -193,10 +230,34 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmModal.style.display = 'none';
         };
         cancelDeleteButton.onclick = () => {
-            checkbox.checked = !checkbox.checked;
+
             confirmModal.style.display = 'none';
         };
     }
+
+    // Confirmation box logic
+    function confirmDelete(taskElement, taskName) {
+        document.getElementById('taskName').innerText = taskName;
+        confirmMessage.style.display = 'block';
+        // Ensure the task name does not overflow
+
+        document.getElementById('confirmYes').onclick = function() {
+            taskElement.parentNode.removeChild(taskElement);
+            saveTasks();
+            confirmMessage.style.display = 'none';
+        };
+
+        document.getElementById('confirmNo').onclick = function() {
+            confirmMessage.style.display = 'none';
+        };
+    }
+
+    function showConfirmation(taskName){
+        const confirmationBox = document.getElementById('confirmationBox');
+        const taskNameElement = document.getElementById('taskName');
+        taskNameElement.innerText = taskName;
+        confirmationBox.classList.remove('hidden');}
+
     //Deletes a task when the delete is confirmed
     confirmDeleteButton.addEventListener('click',() => {
         if (deleteIndex !== -1) {
@@ -207,6 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast(`Task "${task.text}" Deleted Successfully`,'error');
             deleteIndex = -1;
             confirmModal.style.display = 'none';
+            confirmDeleteButton.onclick = null;
+            cancelDeleteButton.onclick = null;
         } else if (completeIndex !== -1) {
             taskToDo[completeIndex].completed = true;
             saveTasks();
@@ -214,37 +277,41 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast(`Task "${taskToDo[completeIndex].text}" marked as completed`,'success');
             completeIndex = -1;
             confirmModal.style.display = 'none';
+            confirmDeleteButton.onclick = null;
+            cancelDeleteButton.onclick = null;
         }
     });
-    
+
     //Cancels the delete action
     cancelDeleteButton.addEventListener('click',() => {
         confirmModal.style.display = 'none';
         deleteIndex = -1;
-        completeIndex = -1;
+        confirmDeleteButton.onclick = null;
+        cancelDeleteButton.onclick = null;
+
     });
-    
+
     //Updates the count of tasks in each category
     function updateCategoryCounts(){
-        const allCount = taskToDo.filter(task => task && task.text && task.text.trim() !== '').length;
+        const allCount = taskToDo.filter(task => task && task.text && task.text.trim()!== '').length;
         const completedCount = taskToDo.filter(task => task && task.completed).length;
-        const inProgressCount = taskToDo.filter(task => task && task.text && !task.completed).length;
-       
+        const inProgressCount = taskToDo.filter(task => task && task.text &&!task.completed).length;
+
         document.querySelector('[data-category="all"]').textContent = `All Tasks (${allCount})`;
         document.querySelector('[data-category="completed"]').textContent = `Completed (${completedCount})`;
         document.querySelector('[data-category="in-progress"]').textContent = `In Progress (${inProgressCount})`;
 
         if (currentCategory === 'all' && allCount === 0) {
             emptyMessage.style.display = 'block';
-        } else if (currentCategory === 'completed' && completedCount === 0){
+        } else if (currentCategory === 'completed' && completedCount === 0) {
             emptyMessage.style.display = 'block';
         } else if (currentCategory === 'in-progress' && inProgressCount === 0) {
             emptyMessage.style.display = 'block';
         } else {
             emptyMessage.style.display = 'none';
         }
-    } 
-    
+    }
+
     //Highlights the active tab
     function updateTabStyles(activeTab) {
         tabs.forEach(tab => {
@@ -254,13 +321,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 tab.classList.remove('active');
             }
         });
-    } 
-    
+    }
+
     //saves task to local storage
     function saveTasks(){
         localStorage.setItem('tasks',JSON.stringify(taskToDo));
-    } 
-       
+        updateCategoryCounts();
+    }
+
     //Displays a toast message
     function showToast(message,type){
         const toast = document.createElement('div');
@@ -276,8 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function switchTab(category) {
         currentCategory = category;
-        renderTasks();
-        updateCategoryCounts();
+
         tabs.forEach(tab => {
             if (tab.dataset.category === category) {
                 tab.classList.add('active');
@@ -286,7 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         updateTabStyles(document.querySelector(`[data-category="${category}"]`));
+        renderTasks();
     }
 
     renderTasks();
+    updateCategoryCounts();
 });
