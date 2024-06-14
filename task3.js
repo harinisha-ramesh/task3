@@ -67,36 +67,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //Adds a new task or edits an existing task
-    function addTask()  {
+    function addTask() {
         const taskValue = taskInput.value.trim();
-        const isDuplicate = taskToDo.some(task => 
-            task && task.text && task.text.toLowerCase() === taskkValue.toLowerCase()
-        );
-        const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // check for valid input
-        if (taskValue && !taskToDo.some(task => task && task.text === taskValue)) {
-            if (editIndex === -1) {
+        const isDuplicate = taskToDo.some(task => task && task.text && task.text.toLowerCase() === taskValue.toLowerCase());
+        const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue);
+
+        if(editIndex === -1) {
+            if(taskValue && !isDuplicate) {
                 taskToDo.unshift({text: taskValue, completed: false});
                 showToast(`Task "${taskValue}" added successfully`,'success');
-            } else {
-                if (taskToDo[editIndex].text !== taskValue);
-                const oldTask = taskToDo[editIndex].text;
-                taskToDo[editIndex].text = taskValue;
-                taskToDo[editIndex].timestamp = Date.now();
-                editIndex = -1;
-                addButton.textContent = 'Add';
-                showToast(`Task "${oldTask}" edited to "${taskValue}" Successfully`,'information')
-            }
-            taskInput.value = '';
-            saveTasks();
-            renderTasks();
-        } else if (taskToDo.some(task => task && task.text === taskValue)) {
-            showToast(`Task "${taskValue}" already exists`,'warning');
-        } else if (taskValue && isDuplicate) {
+                taskInput.value = '';
+                saveTasks();
+                renderTasks();
+            } else if (isDuplicate) {
                 showToast(`Task "${taskValue}" already exists`,'warning');
+            } else {
+                showToast(`Task cannot be empty`,'warning');
+            }
         } else {
-            showToast(`Task cannot be empty`,'warning'); 
+            //Editing an existing task
+            updateTask(editIndex, taskvalue);
+            taskInput.value = '';
+            addButton.textContent = 'Add';
+            editIndex = -1;
         }
         updateCategoryCounts();
+    }
+    function updateTask(index, updatedTaskText) {
+        const currentTaskText = taskToDo[index].task;
+        if (currentTaskText === updatedTaskText) {
+            showToast('There is no change in the task','information');
+        } else if (taskToDo.some((task, i) => task && task.task === updatedTaskText && i !== index)) {
+            showToast('Task already exists','error');
+        } else {
+            taskToDo[index].task = updatedTaskText;
+            saveTasks();
+            renderTasks();
+            showToast('There is no change in the Task','information');
+        }
+        closeModal();
     }
     
     //Renders the tasks based on the selected category
@@ -196,6 +205,27 @@ document.addEventListener('DOMContentLoaded', () => {
             checkbox.checked = !checkbox.checked;
             confirmModal.style.display = 'none';
         };
+    }
+    //confirmation box logic
+    function confirmDelete(taskElement, taskName) {
+        document.getElementById('taskName').innerText = taskName;
+        confirmMessage.style.display = 'block';
+
+        document.getElementById('confirmYes').onclick = function() {
+            taskElement.parentNode.removeChild(taskElement);
+            saveTasks();
+            confirmMessage.style.display = 'none';
+        };
+        
+        document.getElementById('confirmNo').onclick = function() {
+            confirmMessage.style.display = 'none';
+        };
+    }
+    function showConfirmation(taskName){
+        const confirmationBox = document.getElementById('confirmationBox');
+        const taskNameElement = document.getElementById('taskName');
+        taskNameElement.innerText = taskName;
+        confirmationBox.classList.remove('hidden');
     }
     //Deletes a task when the delete is confirmed
     confirmDeleteButton.addEventListener('click',() => {
