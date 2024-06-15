@@ -55,11 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 addTask(taskInput.value);
                 taskInput.value = ''; // Clear the task input box
             } else {
-<<<<<<< HEAD
-                showToast('Task cannote be empty', 'warning');
-=======
-                showToast('Please enter a task', 'error');
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
+
             }
         }
     });
@@ -109,16 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
             taskInput.value = '';
             addButton.textContent = 'Add';
             editIndex = -1;
-<<<<<<< HEAD
-            isEditing = false;
-            closeModal();
-=======
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
-        }
     
         updateCategoryCounts();
     }
-    
+} 
     function updateTask(index, updatedTaskText) {
         const currentTaskText = taskToDo[index].text;
         if (currentTaskText === updatedTaskText) {
@@ -142,42 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();
     }
     
-<<<<<<< HEAD
-    function closeModal() {
-        const modal = document.querySelector('#completeModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    } 
 
-=======
-    
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
     //Renders the tasks based on the selected category
     function renderTasks() {
         const filteredTasks = taskToDo.filter(task => {
             if(currentCategory === 'completed') {
                 return task && task.completed;
             } else if (currentCategory === 'in-progress'){
-<<<<<<< HEAD
-                return task && !task.completed;
-=======
-                return task &&!task.completed;
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
+
             } else {
                 return true;
             }    
         });
-<<<<<<< HEAD
-        
-=======
-        filteredTasks.sort((a, b) => {
-if (a && b && a.timestamp && b.timestamp) {
-                return b.timestamp - a.timestamp;
-            }
-            return 0;
-        });
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
+
+
         taskList.innerHTML = '';
 
         filteredTasks.forEach((task, index) => {
@@ -204,11 +172,7 @@ if (a && b && a.timestamp && b.timestamp) {
                     taskInput.value = task.text;
                     addButton.textContent = 'Save';
                     editIndex = index;
-<<<<<<< HEAD
-                    isEditing = true;
-                    editingIndex = index;
-=======
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
+
                     taskInput.focus();
                 });
 
@@ -390,8 +354,4 @@ if (a && b && a.timestamp && b.timestamp) {
 
     renderTasks();
     updateCategoryCounts();
-<<<<<<< HEAD
-});
-=======
-});
->>>>>>> 64249886cdb6630264a0756503f63c324b712f5f
+    });    
