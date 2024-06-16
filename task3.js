@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 addTask(taskInput.value);
                 taskInput.value = ''; // Clear the task input box
             } else {
-
+                showToast('Task cannot be empty','warning');
             }
         }
     });
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         if (editIndex === -1) {
             // Adding a new task
-            if (taskValue &&!isDuplicate) {
+            if (taskValue && !isDuplicate) {
                 taskToDo.unshift({ text: taskValue, completed: false });
                 showToast(`Task "${taskValue}" added successfully`, 'success');
                 taskInput.value = '';
@@ -105,6 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
             taskInput.value = '';
             addButton.textContent = 'Add';
             editIndex = -1;
+            isEditing = false;
+            closeModal();
     
         updateCategoryCounts();
     }
@@ -132,6 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();
     }
     
+    function closeModal() {
+        const modal = document.querySelector('#completeModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
 
     //Renders the tasks based on the selected category
     function renderTasks() {
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(currentCategory === 'completed') {
                 return task && task.completed;
             } else if (currentCategory === 'in-progress'){
-
+                return task && !task.completed;
             } else {
                 return true;
             }    
