@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     specialCharNote.style.display = 'none';
     specialCharNote.style.color = 'red';
     document.querySelector('.container').appendChild(specialCharNote);
-
+    
     taskInput.addEventListener('keypress', (event) => {
         const inputChar = event.key;
         const specialChars = `,./<>?;':"\|{}[]()!@#$%^&*~`;
@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add mode
             if (taskInput.value.trim() !== '') {
                 addTask(taskInput.value);
-                taskInput.value = ''; // Clear the task input box
+                taskInput.value = '';
+                // Clear the task input box
             } else {
                 showToast('Task cannot be empty','warning');
             }
@@ -65,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(event.key === 'Enter') {
             switchTab('all');
             addTask();
+            
         }
     });
     
@@ -77,16 +79,18 @@ document.addEventListener('DOMContentLoaded', () => {
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             updateTabStyles(tab);
+            
         });
     });
     
-    //Function to trim input value and remove extra spaces
-    function normalizeInput(value) {
-        return value.replace(/\s+/g,' ').trim();
-    }
+    // Function to trim input value and remove extra spaces
+function normalizeInput(value) {
+    return value.replace(/\s+/g, ' ').trim();
+}
+
     //Adds a new task or edits an existing task
     function addTask() {
-        const taskValue = taskInput.value.trim();
+        const taskValue =  normalizeInput(taskInput.value);;
         const isDuplicate = taskToDo.some(task => task && task.text && task.text.toLowerCase() === taskValue.toLowerCase());
         const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // Check for valid input
     
@@ -98,14 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 taskInput.value = '';
                 saveTasks();
                 renderTasks();
-                const taskListContainer = document.querySelector('.taskListContainer');
+                const taskListContainer = document.querySelector('.taskListContainer'); // Adjust selector if needed
                 if (taskListContainer) {
                     taskListContainer.scrollTop = 0;
                 } else {
                     console.error('Task list container not found.');
                 }
             } else if (isDuplicate) {
-                showToast(`Task  already exists`, 'warning');
+                showToast(`Task already exists`, 'warning');
             } else {
                 showToast(`Task cannot be empty`, 'warning');
             }
@@ -119,14 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
     
         updateCategoryCounts();
+      
     }
+   
 } 
     function updateTask(index, updatedTaskText) {
         const currentTaskText = taskToDo[index].text;
         const trimmedText = normalizeInput(updatedTaskText);
         const isDuplicate = taskToDo.some((task, i) => 
         task && task.text && task.text.toLowerCase() === trimmedText.toLowerCase() && i !== index);
-        if (currentTaskText === updatedTaskText) {
+        if (currentTaskText === trimmedText) {
             showToast('There is no change in the task', 'information');
            
         } else if (isDuplicate) {
@@ -140,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTasks();
             showToast(`Task edited successfully`, 'information');
             
+            
         }
         taskInput.value = ''; // Clear the task input box
         addButton.textContent = 'Add';
@@ -147,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editingIndex = -1;
         editIndex= -1
         closeModal();
-        const taskListContainer = document.querySelector('.taskListContainer');
+        const taskListContainer = document.querySelector('.taskListContainer'); // Adjust selector if needed
         if (taskListContainer) {
             taskListContainer.scrollTop = 0;
         } else {
@@ -201,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     taskInput.value = task.text;
                     addButton.textContent = 'Save';
                     editIndex = index;
+
                     taskInput.focus();
                 });
 
@@ -209,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteButton.addEventListener('click', () => {
                     deleteIndex = index;
                     if(confirmMessage) {
-                        confirmMessage.innerHTML = `Are you sure do you want to delete the task?<br>Task:"${task.text}" `;
+                        confirmMessage.innerHTML = `Are you sure you want to delete the task?<br>Task: "${task.text}"`;
                     } 
                     confirmModal.style.display = 'block';
                 });
@@ -227,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     taskText.style.textDecoration = "none";
                 }
-          
             }
         });
 
@@ -236,12 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function confirmCompletion(task,index,checkbox){
         const originalState = checkbox.checked;
-        const confirmCompleteButton = document.getElementById('confirmComplete');
-        const cancelCompleteButton = document.getElementById('cancelComplete');
+        const confirmCompleteButton = document.getElementById('confirmComplete'); // Updated ID
+        const cancelCompleteButton = document.getElementById('cancelComplete'); 
         const completeMessage = document.getElementById('completeMessage');
         completeMessage.innerHTML = originalState ?
-            `Are you sure do you want to mark the task as completed?<br>Task:"${task.text}" `:
-            `Are you sure do you want to mark the task as uncompleted?<br>Task:"${task.text}" `;
+        `Are you sure you want to mark the task as completed?<br>Task: "${task.text}"`:
+        `Are you sure you want to mark the task as uncompleted?<br>Task: "${task.text}"` ;
         const completeModal = document.getElementById('completeModal');
         completeModal.style.display = 'block';
 
@@ -250,34 +257,23 @@ document.addEventListener('DOMContentLoaded', () => {
             task.completed = originalState;
             task.timestamp = Date.now();
             saveTasks();
-            if (originalState) {
-                taskToDo.splice(index, 1);
-                taskToDo.unshift(task);
-            }
-            else if (!originalState) {
-                taskToDo.splice(index, 1);
-                taskToDo.unshift(task);
-            }
-            const taskListContainer = document.querySelector('.taskListContainer');
-        if (taskListContainer) {
-            taskListContainer.scrollTop = 0;
-        } else {
-            console.error('Task list container not found.');
-        }
             renderTasks();
-            showToast(`Task marked as ${task.completed ? 'completed' : 'in progress'}`,'success');
+            showToast(`Task marked as ${task.completed ? 'completed' : 'in progress'}`, 'success');
             
             if (currentCategory === 'completed' && !originalState) {
-                switchTab('in-progress');
+                switchTab('in-progress'); // Switch to In Progress tab if marking uncompleted in Completed tab
             } else if (currentCategory === 'in-progress' && originalState) {
-                switchTab('completed');
-            }
-         };
+                switchTab('completed'); // Switch to Completed tab if marking completed in In Progress tab
+            }    
+        };
         cancelCompleteButton.onclick = function()  {
             completeModal.style.display = 'none';
             checkbox.checked = !originalState;
         };
     }
+ 
+
+
 
     // Confirmation box logic
     function confirmDelete(taskElement, taskName) {
@@ -315,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
             taskToDo.splice(deleteIndex,1);
             saveTasks();
             renderTasks();
-            showToast(`Task  Deleted Successfully`,'error');
+            showToast(`Task Deleted Successfully`,'error');
             deleteIndex = -1;
             confirmModal.style.display = 'none';
             confirmDeleteButton.onclick = null;
@@ -408,4 +404,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderTasks();
     updateCategoryCounts();
-    });    
+    }); 
