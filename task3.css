@@ -19,7 +19,8 @@ html,body {
 
 .container {
     height: auto;
-    margin:15px;
+    margin: 15px;
+    margin-bottom: 5px;
     width: 50%;
     background-color: rgb(224, 223, 222);
     padding: 20px;
@@ -29,6 +30,7 @@ html,body {
 h1 {
     text-align: center;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .input-container {
@@ -77,6 +79,7 @@ h1 {
     flex-grow: 1;
     padding: 0 20px;
     margin: 5px;
+    margin-bottom: 15px;
 }
 
 .taskListHeader{
@@ -85,7 +88,7 @@ h1 {
     justify-content: space-between;
     background-color: #ccc;
     padding: 10px;
-    
+    align-items: center;
     border-radius: 5px;
     position: sticky;
     top: 0;
@@ -97,7 +100,6 @@ h1 {
     font-weight: bold;
 }
 .taskListHeader .taskListHeaderText{
-    flex: 2;
     text-align: center;
 }
 .taskListHeader .taskListHeaderActions{
@@ -110,6 +112,7 @@ h1 {
     padding: 0;
     margin-top: 10px;
     font-size: 18px;
+    overflow-y: auto;
 }
 .empty-message{
     display: none; /* Initially hide the empty message */
@@ -223,6 +226,8 @@ h1 {
     top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-height: 70%;
+    overflow-y: auto;
 }
 .modal-content button{
     margin: 10px;
@@ -230,12 +235,16 @@ h1 {
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    position: relative;
+    bottom: 0;
 }
 .modal-content p{
     margin:  10px 0;
     word-wrap: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: 250px;
+    overflow-y: auto;
 }
 .hidden{
     display: none;
@@ -254,7 +263,16 @@ h1 {
     color: white;
     font-weight: bold;
 }
-
+.modal-content #confirmComplete{
+    background-color: rgb(168, 36, 36);
+    color: white;
+    font-weight: bold;
+}
+.modal-content #cancelComplete{
+    background-color: rgb(25, 142, 189);
+    color: white;
+    font-weight: bold;
+}
 @media screen and (max-width: 380px) {
     /* Adjustments for screens below 380 pixels wide */
 
