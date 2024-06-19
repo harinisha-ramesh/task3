@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 deleteButton.addEventListener('click', () => {
                     deleteIndex = index;
                     if(confirmMessage) {
-                        confirmMessage.textContent = `Are you sure do you want to delete the task?<br>Task:"${task.text}"`;
+                        confirmMessage.innerHTML = `Are you sure do you want to delete the task?<br>Task:"${task.text}" `;
                     } 
                     confirmModal.style.display = 'block';
                 });
@@ -228,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     taskText.style.textDecoration = "none";
                 }
+          
             }
         });
 
@@ -250,6 +251,20 @@ document.addEventListener('DOMContentLoaded', () => {
             task.completed = originalState;
             task.timestamp = Date.now();
             saveTasks();
+            if (originalState) {
+                taskToDo.splice(index, 1);
+                taskToDo.unshift(task);
+            }
+            else if (!originalState) {
+                taskToDo.splice(index, 1);
+                taskToDo.unshift(task);
+            }
+            const taskListContainer = document.querySelector('.taskListContainer');
+        if (taskListContainer) {
+            taskListContainer.scrollTop = 0;
+        } else {
+            console.error('Task list container not found.');
+        }
             renderTasks();
             showToast(`Task marked as ${task.completed ? 'completed' : 'in progress'}`,'success');
             
