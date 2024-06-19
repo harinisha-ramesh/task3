@@ -298,6 +298,60 @@ h1 {
     }
     .taskListContainer {
         padding: 0 10px; 
+        width:90%;
+    }
+
+    #taskList li {
+        padding: 8px; 
+        margin-bottom: 8px; 
+    }
+
+    .taskListHeader {
+        padding: 8px; 
+        margin-top: 3px; 
+        margin-bottom: 3px; 
+    }
+
+    .task-text {
+        margin-right: 5px; 
+        font-size: 16px; 
+    }
+
+    .editButton,
+    .deleteButton {
+        font-size: 14px; 
+    }
+
+    .modal-content {
+        width: 70%; 
+    }
+}
+@media screen and (max-width: 600px) {
+    /* Adjustments for screens below 380 pixels wide */
+
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    #taskInput {
+        width: 75%;
+    }
+
+    #addButton {
+        width: 20%;
+    }
+
+    .tab {
+        padding: 8px 16px;
+    }
+
+    .taskListContainer {
+        padding: 0 ;
+    }
+    .taskListContainer {
+        padding: 0 10px; 
+        width:80%;
     }
 
     #taskList li {
