@@ -127,6 +127,11 @@ function normalizeInput(value) {
     }
    
 } 
+
+    function switchToAllTab() {
+        switchTab('all');
+    }
+
     function updateTask(index, updatedTaskText) {
         const currentTaskText = taskToDo[index].text;
         const trimmedText = normalizeInput(updatedTaskText);
@@ -160,6 +165,7 @@ function normalizeInput(value) {
         } else {
             console.error('Task list container not found.');
         }
+        switchToAllTab();
     }
     
     function closeModal() {
