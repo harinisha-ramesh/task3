@@ -83,7 +83,7 @@ h1 {
 }
 
 .taskListHeader{
-    height: 5%;
+   
     display: flex;
     justify-content: space-between;
     background-color: #ccc;
@@ -113,6 +113,7 @@ h1 {
     margin-top: 10px;
     font-size: 18px;
     overflow-y: auto;
+    
 }
 .empty-message{
     display: none; /* Initially hide the empty message */
