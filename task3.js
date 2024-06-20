@@ -259,6 +259,10 @@ function normalizeInput(value) {
             completeModal.style.display = 'none';
             task.completed = originalState;
             task.timestamp = Date.now();
+
+            const [updatedTask] = taskToDo.splice(index, 1);
+            taskToDo.unshift(updatedTask);
+            
             saveTasks();
             renderTasks();
             showToast(`Task marked as ${task.completed ? 'completed' : 'in progress'}`, 'success');
