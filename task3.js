@@ -128,9 +128,6 @@ function normalizeInput(value) {
    
 } 
 
-    function switchToAllTab() {
-        switchTab('all');
-    }
 
     function updateTask(index, updatedTaskText) {
         const currentTaskText = taskToDo[index].text;
@@ -165,7 +162,7 @@ function normalizeInput(value) {
         } else {
             console.error('Task list container not found.');
         }
-        switchToAllTab();
+        
     }
     
     function closeModal() {
@@ -190,7 +187,7 @@ function normalizeInput(value) {
 
         taskList.innerHTML = '';
 
-        filteredTasks.forEach((task, index) => {
+        filteredTasks.forEach((task, filteredIndex) => {
             if (task && task.text) {
                 const li = document.createElement('li');
 
@@ -205,7 +202,7 @@ function normalizeInput(value) {
                 checkbox.type = 'checkbox';
                 checkbox.checked = task.completed;
                 checkbox.addEventListener('change',() => {
-                    confirmCompletion(task,index,checkbox);           
+                    confirmCompletion(task, taskToDo.indexOf(task), checkbox);           
                 });
 
                 const editButton = document.createElement('button');
@@ -213,7 +210,7 @@ function normalizeInput(value) {
                 editButton.addEventListener('click', () => {
                     taskInput.value = task.text;
                     addButton.textContent = 'Save';
-                    editIndex = index;
+                    editIndex = taskToDo.indexOf(task);
 
                     taskInput.focus();
                 });
@@ -221,7 +218,7 @@ function normalizeInput(value) {
                 const deleteButton = document.createElement('button');
                 deleteButton.classList.add('deleteButton');
                 deleteButton.addEventListener('click', () => {
-                    deleteIndex = index;
+                    deleteIndex = taskToDo.indexOf(task);
                     if(confirmMessage) {
                         confirmMessage.innerHTML = `Are you sure you want to delete the task?<br>Task: "${task.text}"`;
                     } 
