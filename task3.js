@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let deleteIndex = -1;
     let completeIndex = -1;
 
-    const specialChars = `,./<>?;':"\|{}[]()!@#$%^&*~`;
+   
     const specialCharNote = document.createElement('div');
     specialCharNote.textContent = '*Special Characters are not Allowed*';
     specialCharNote.style.display = 'none';
@@ -92,7 +92,7 @@ function normalizeInput(value) {
     function addTask() {
         const taskValue =  normalizeInput(taskInput.value);;
         const isDuplicate = taskToDo.some(task => task && task.text && task.text.toLowerCase() === taskValue.toLowerCase());
-        const isValidInput = /^[A-Za-z0-9][A-Za-z0-9\s]*$/.test(taskValue); // Check for valid input
+       
     
         if (editIndex === -1) {
             // Adding a new task
@@ -279,31 +279,6 @@ function normalizeInput(value) {
         };
     }
  
-
-
-
-    // Confirmation box logic
-    function confirmDelete(taskElement, taskName) {
-        document.getElementById('taskName').innerText = taskName;
-        confirmMessage.style.display = 'block';
-        // Ensure the task name does not overflow
-
-        document.getElementById('confirmYes').onclick = function() {
-            taskElement.parentNode.removeChild(taskElement);
-            saveTasks();
-            confirmMessage.style.display = 'none';
-        };
-
-        document.getElementById('confirmNo').onclick = function() {
-            confirmMessage.style.display = 'none';
-        };
-    }
-
-    function showConfirmation(taskName){
-        const confirmationBox = document.getElementById('confirmationBox');
-        const taskNameElement = document.getElementById('taskName');
-        taskNameElement.innerText = taskName;
-        confirmationBox.classList.remove('hidden');}
 
     //Deletes a task when the delete is confirmed
     confirmDeleteButton.addEventListener('click',() => {
